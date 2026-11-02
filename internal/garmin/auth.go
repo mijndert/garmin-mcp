@@ -20,6 +20,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"sync"
 	"time"
@@ -104,6 +105,10 @@ func ResolveAPIKey(explicit, keyFile string) (string, KeySource, error) {
 }
 
 func warnIfWorldReadable(path string) {
+	// Windows has no Unix permission bits; Go reports a fixed 0666 or 0444.
+	if runtime.GOOS == "windows" {
+		return
+	}
 	info, err := os.Stat(path)
 	if err != nil {
 		return
