@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "garmin": {
+      "command": "garmin-mcp",
+      "env": {
+        "GARMIN_PERSONAL_API_KEY": "paste-your-key-here"
+      }
+    }
+  }
+}

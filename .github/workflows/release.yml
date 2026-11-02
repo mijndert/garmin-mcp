@@ -1,0 +1,36 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+
+      # Binaries, archives and checksums.txt for install.sh and manual downloads.
+      - uses: goreleaser/goreleaser-action@v6
+        with:
+          version: "~> v2"
+          args: release --clean
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Claude Desktop one-click bundle, attached to the same release.
+      - name: Build .mcpb bundle
+        run: mcpb/build.sh "${GITHUB_REF_NAME}" dist
+      - name: Upload .mcpb to release
+        run: gh release upload "${GITHUB_REF_NAME}" dist/garmin-mcp.mcpb --clobber
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

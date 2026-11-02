@@ -1,0 +1,87 @@
+{
+  "manifest_version": "0.3",
+  "name": "garmin-mcp",
+  "display_name": "Garmin Connect",
+  "version": "__VERSION__",
+  "description": "Read your own Garmin Connect data: activities, sleep, heart rate, HRV, stress, Body Battery, steps, weight and more.",
+  "long_description": "Connects Claude to the Garmin Connect Personal API so you can ask about your training, sleep and health data in plain language. Needs a Personal API Key, which you create in Garmin Connect under Settings. Everything is read-only; the only file it writes is an activity file you explicitly ask it to download.",
+  "author": {
+    "name": "Mijndert Stuij",
+    "url": "https://github.com/mijndert"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mijndert/garmin-mcp"
+  },
+  "homepage": "https://github.com/mijndert/garmin-mcp",
+  "documentation": "https://github.com/mijndert/garmin-mcp#readme",
+  "support": "https://github.com/mijndert/garmin-mcp/issues",
+  "license": "MIT",
+  "keywords": ["garmin", "fitness", "health", "running", "cycling", "sleep", "heart rate"],
+  "privacy_policies": ["https://www.garmin.com/privacy/"],
+  "server": {
+    "type": "binary",
+    "entry_point": "server/garmin-mcp-darwin",
+    "mcp_config": {
+      "command": "${__dirname}/server/garmin-mcp-darwin",
+      "args": [],
+      "env": {
+        "GARMIN_PERSONAL_API_KEY": "${user_config.api_key}",
+        "GARMIN_MCP_DOWNLOAD_DIR": "${user_config.download_dir}"
+      },
+      "platform_overrides": {
+        "win32": { "command": "${__dirname}/server/garmin-mcp-windows.exe" },
+        "linux": { "command": "${__dirname}/server/garmin-mcp-linux" }
+      }
+    }
+  },
+  "user_config": {
+    "api_key": {
+      "type": "string",
+      "title": "Garmin Personal API Key",
+      "description": "Create one in Garmin Connect on the web: Settings > Personal API Key > Create Key. It is shown once; paste it here.",
+      "sensitive": true,
+      "required": true
+    },
+    "download_dir": {
+      "type": "directory",
+      "title": "Download folder",
+      "description": "Where downloaded activity files (FIT/GPX) are saved.",
+      "default": "${HOME}/Downloads/garmin-mcp",
+      "required": false
+    }
+  },
+  "tools": [
+    { "name": "search_activities", "description": "Find activities by type, date, distance and more" },
+    { "name": "get_activity", "description": "Full details of one activity" },
+    { "name": "get_activity_workouts", "description": "Workout steps performed in an activity" },
+    { "name": "download_activity_file", "description": "Save the original FIT/GPX file to disk" },
+    { "name": "get_wellness_activity_summaries", "description": "Auto-detected wellness activities" },
+    { "name": "get_daily_summary", "description": "Steps, calories, HR, stress, Body Battery for a day" },
+    { "name": "get_daily_summaries", "description": "Daily summaries over a range" },
+    { "name": "get_daily_steps", "description": "Steps per day" },
+    { "name": "get_daily_stress", "description": "Stress per day" },
+    { "name": "get_daily_hydration", "description": "Hydration per day" },
+    { "name": "get_daily_heart_rate", "description": "Heart rate timeline for a day" },
+    { "name": "get_heart_rate_zones", "description": "Configured heart rate zones" },
+    { "name": "get_hrv", "description": "Overnight HRV for a night" },
+    { "name": "get_hrv_daily", "description": "HRV summaries over a range" },
+    { "name": "get_daily_sleep", "description": "Sleep stages and score for a night" },
+    { "name": "get_sleep_summaries", "description": "Sleep summaries over a range" },
+    { "name": "get_body_battery", "description": "Body Battery per day" },
+    { "name": "get_spo2", "description": "Blood oxygen for a day" },
+    { "name": "get_fitness_age", "description": "Fitness Age and contributing factors" },
+    { "name": "get_weight_entries", "description": "All weigh-ins in a range" },
+    { "name": "get_weight_range", "description": "Weight summary for a range" },
+    { "name": "get_weight_goals", "description": "Weight goals" },
+    { "name": "get_nutrition_logs", "description": "Food log for a day" },
+    { "name": "get_menstrual_cycle_summary", "description": "Menstrual cycle summary" },
+    { "name": "get_menstrual_cycle_day_view", "description": "Menstrual cycle day detail" },
+    { "name": "get_user_profile_settings", "description": "Profile, units and time zone" },
+    { "name": "get_auth_status", "description": "Check the API key works" }
+  ],
+  "compatibility": {
+    "claude_desktop": ">=0.10.0",
+    "platforms": ["darwin", "win32", "linux"]
+  }
+}

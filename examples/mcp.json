@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "garmin": {
+      "type": "stdio",
+      "command": "garmin-mcp",
+      "args": [],
+      "env": {
+        "GARMIN_PERSONAL_API_KEY": "${GARMIN_PERSONAL_API_KEY}"
+      }
+    }
+  }
+}
